@@ -31,7 +31,7 @@ void reorg_cpu(float *x, int w, int h, int c, int batch, int stride, int forward
 
 void flatten(float *x, int size, int layers, int batch, int forward)
 {
-    float *swap = (float*)calloc(size*layers*batch, sizeof(float));
+    float *swap = (float*)ta_calloc(size*layers*batch, sizeof(float));
     int i,c,b;
     for(b = 0; b < batch; ++b){
         for(c = 0; c < layers; ++c){
@@ -44,7 +44,7 @@ void flatten(float *x, int size, int layers, int batch, int forward)
         }
     }
     memcpy(x, swap, size*layers*batch*sizeof(float));
-    ////free(swap);
+    ta_free(swap);
 }
 
 void weighted_sum_cpu(float *a, float *b, float *s, int n, float *c)

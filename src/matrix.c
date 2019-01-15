@@ -11,15 +11,15 @@ void free_matrix(matrix m)
 {
     int i;
     /*
-    for(i = 0; i < m.rows; ++i) //free(m.vals[i]);
-    //free(m.vals);
+    for(i = 0; i < m.rows; ++i) ta_free(m.vals[i]);
+    ta_free(m.vals);
      * */
 
 }
 
 float matrix_topk_accuracy(matrix truth, matrix guess, int k)
 {
-    int *indexes = (int*)calloc(k, sizeof(int));
+    int *indexes = (int*)ta_calloc(k, sizeof(int));
     int n = truth.cols;
     int i,j;
     int correct = 0;
@@ -33,7 +33,7 @@ float matrix_topk_accuracy(matrix truth, matrix guess, int k)
             }
         }
     }
-    //free(indexes);
+    ta_free(indexes);
     return (float)correct/truth.rows;
 }
 
@@ -54,11 +54,11 @@ matrix resize_matrix(matrix m, int size)
     if (m.rows < size) {
         m.vals = (float**)realloc(m.vals, size*sizeof(float*));
         for (i = m.rows; i < size; ++i) {
-            m.vals[i] = (float*)calloc(m.cols, sizeof(float));
+            m.vals[i] = (float*)ta_calloc(m.cols, sizeof(float));
         }
     } else if (m.rows > size) {
         for (i = size; i < m.rows; ++i) {
-            //free(m.vals[i]);
+            ta_free(m.vals[i]);
         }
         m.vals = (float**)realloc(m.vals, size*sizeof(float*));
     }
@@ -82,10 +82,10 @@ matrix copy_matrix(matrix m)
     matrix c = {0};
     c.rows = m.rows;
     c.cols = m.cols;
-    c.vals = (float**)calloc(c.rows, sizeof(float *));
+    c.vals = (float**)ta_calloc(c.rows, sizeof(float *));
     int i;
     for(i = 0; i < c.rows; ++i){
-        c.vals[i] = (float*)calloc(c.cols, sizeof(float));
+        c.vals[i] = (float*)ta_calloc(c.cols, sizeof(float));
         copy_cpu(c.cols, m.vals[i], 1, c.vals[i], 1);
     }
     return c;
@@ -97,9 +97,9 @@ matrix make_matrix(int rows, int cols)
     matrix m;
     m.rows = rows;
     m.cols = cols;
-    m.vals = (float**)calloc(m.rows, sizeof(float *));
+    m.vals = (float**)ta_calloc(m.rows, sizeof(float *));
     for(i = 0; i < m.rows; ++i){
-        m.vals[i] = (float*)calloc(m.cols, sizeof(float));
+        m.vals[i] = (float*)ta_calloc(m.cols, sizeof(float));
     }
     return m;
 }
@@ -110,7 +110,7 @@ matrix hold_out_matrix(matrix *m, int n)
     matrix h;
     h.rows = n;
     h.cols = m->cols;
-    h.vals = (float**)calloc(h.rows, sizeof(float *));
+    h.vals = (float**)ta_calloc(h.rows, sizeof(float *));
     for(i = 0; i < n; ++i){
         int index = rand()%m->rows;
         h.vals[i] = m->vals[index];
@@ -121,7 +121,7 @@ matrix hold_out_matrix(matrix *m, int n)
 
 float *pop_column(matrix *m, int c)
 {
-    float *col = (float*)calloc(m->rows, sizeof(float));
+    float *col = (float*)ta_calloc(m->rows, sizeof(float));
     int i, j;
     for(i = 0; i < m->rows; ++i){
         col[i] = m->vals[i][c];
@@ -145,7 +145,7 @@ matrix csv_to_matrix(char *filename)
 
     int n = 0;
     int size = 1024;
-    m.vals = (float**)calloc(size, sizeof(float*));
+    m.vals = (float**)ta_calloc(size, sizeof(float*));
     while((line = fgetl(fp))){
         if(m.cols == -1) m.cols = count_fields(line);
         if(n == size){
@@ -153,7 +153,7 @@ matrix csv_to_matrix(char *filename)
             m.vals = (float**)realloc(m.vals, size*sizeof(float*));
         }
         m.vals[n] = parse_fields(line, m.cols);
-        //free(line);
+        ta_free(line);
         ++n;
     }
     m.vals = (float**)realloc(m.vals, n*sizeof(float*));

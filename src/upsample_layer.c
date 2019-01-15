@@ -25,8 +25,8 @@ layer make_upsample_layer(int batch, int w, int h, int c, int stride)
     l.stride = stride;
     l.outputs = l.out_w*l.out_h*l.out_c;
     l.inputs = l.w*l.h*l.c;
-    l.delta =  (float*)calloc(l.outputs*batch, sizeof(float));
-    l.output = (float*)calloc(l.outputs*batch, sizeof(float));;
+    l.delta =  (float*)ta_calloc(l.outputs*batch, sizeof(float));
+    l.output = (float*)ta_calloc(l.outputs*batch, sizeof(float));;
 
     l.forward = forward_upsample_layer;
     l.backward = backward_upsample_layer;

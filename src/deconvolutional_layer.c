@@ -50,11 +50,11 @@ layer make_deconvolutional_layer(int batch, int h, int w, int c, int n, int size
     l.nweights = c*n*size*size;
     l.nbiases = n;
 
-    l.weights = (float*)calloc(c*n*size*size, sizeof(float));
-    l.weight_updates = (float*)calloc(c*n*size*size, sizeof(float));
+    l.weights = (float*)ta_calloc(c*n*size*size, sizeof(float));
+    l.weight_updates = (float*)ta_calloc(c*n*size*size, sizeof(float));
 
-    l.biases = (float*)calloc(n, sizeof(float));
-    l.bias_updates = (float*)calloc(n, sizeof(float));
+    l.biases = (float*)ta_calloc(n, sizeof(float));
+    l.bias_updates = (float*)ta_calloc(n, sizeof(float));
     //float scale = n/(size*size*c);
     //printf("scale: %f\n", scale);
     float scale = .02;
@@ -73,8 +73,8 @@ layer make_deconvolutional_layer(int batch, int h, int w, int c, int n, int size
 
     scal_cpu(l.nweights, (float)l.out_w*l.out_h/(l.w*l.h), l.weights, 1);
 
-    l.output = (float*)calloc(l.batch*l.outputs, sizeof(float));
-    l.delta  = (float*)calloc(l.batch*l.outputs, sizeof(float));
+    l.output = (float*)ta_calloc(l.batch*l.outputs, sizeof(float));
+    l.delta  = (float*)ta_calloc(l.batch*l.outputs, sizeof(float));
 
     l.forward = forward_deconvolutional_layer;
     l.backward = backward_deconvolutional_layer;
@@ -83,30 +83,30 @@ layer make_deconvolutional_layer(int batch, int h, int w, int c, int n, int size
     l.batch_normalize = batch_normalize;
 
     if(batch_normalize){
-        l.scales = (float*)calloc(n, sizeof(float));
-        l.scale_updates = (float*)calloc(n, sizeof(float));
+        l.scales = (float*)ta_calloc(n, sizeof(float));
+        l.scale_updates = (float*)ta_calloc(n, sizeof(float));
         for(i = 0; i < n; ++i){
             l.scales[i] = 1;
         }
 
-        l.mean = (float*)calloc(n, sizeof(float));
-        l.variance = (float*)calloc(n, sizeof(float));
+        l.mean = (float*)ta_calloc(n, sizeof(float));
+        l.variance = (float*)ta_calloc(n, sizeof(float));
 
-        l.mean_delta = (float*)calloc(n, sizeof(float));
-        l.variance_delta = (float*)calloc(n, sizeof(float));
+        l.mean_delta = (float*)ta_calloc(n, sizeof(float));
+        l.variance_delta = (float*)ta_calloc(n, sizeof(float));
 
-        l.rolling_mean = (float*)calloc(n, sizeof(float));
-        l.rolling_variance = (float*)calloc(n, sizeof(float));
-        l.x = (float*)calloc(l.batch*l.outputs, sizeof(float));
-        l.x_norm = (float*)calloc(l.batch*l.outputs, sizeof(float));
+        l.rolling_mean = (float*)ta_calloc(n, sizeof(float));
+        l.rolling_variance = (float*)ta_calloc(n, sizeof(float));
+        l.x = (float*)ta_calloc(l.batch*l.outputs, sizeof(float));
+        l.x_norm = (float*)ta_calloc(l.batch*l.outputs, sizeof(float));
     }
     if(adam){
-        l.m = (float*)calloc(c*n*size*size, sizeof(float));
-        l.v = (float*)calloc(c*n*size*size, sizeof(float));
-        l.bias_m = (float*)calloc(n, sizeof(float));
-        l.scale_m = (float*)calloc(n, sizeof(float));
-        l.bias_v = (float*)calloc(n, sizeof(float));
-        l.scale_v = (float*)calloc(n, sizeof(float));
+        l.m = (float*)ta_calloc(c*n*size*size, sizeof(float));
+        l.v = (float*)ta_calloc(c*n*size*size, sizeof(float));
+        l.bias_m = (float*)ta_calloc(n, sizeof(float));
+        l.scale_m = (float*)ta_calloc(n, sizeof(float));
+        l.bias_v = (float*)ta_calloc(n, sizeof(float));
+        l.scale_v = (float*)ta_calloc(n, sizeof(float));
     }
 
 #ifdef GPU

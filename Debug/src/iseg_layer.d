@@ -1,5 +1,5 @@
 src/iseg_layer.o src/iseg_layer.o: ../src/iseg_layer.c \
- ../src/iseg_layer.h ../src/darknet.h ../src/tree.h \
+ ../src/iseg_layer.h ../src/darknet.h ../src/tree.h ../src/tinyalloc.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xtime_l.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xil_types.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xparameters.h \
@@ -12,6 +12,8 @@ src/iseg_layer.o src/iseg_layer.o: ../src/iseg_layer.c \
 ../src/darknet.h:
 
 ../src/tree.h:
+
+../src/tinyalloc.h:
 
 ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xtime_l.h:
 

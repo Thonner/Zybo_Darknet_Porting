@@ -37,34 +37,34 @@ layer make_gru_layer(int batch, int inputs, int outputs, int steps, int batch_no
     l.steps = steps;
     l.inputs = inputs;
 
-    l.uz = (layer*)malloc(sizeof(layer));
+    l.uz = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.uz) = make_connected_layer(batch*steps, inputs, outputs, LINEAR, batch_normalize, adam);
     l.uz->batch = batch;
 
-    l.wz = (layer*)malloc(sizeof(layer));
+    l.wz = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.wz) = make_connected_layer(batch*steps, outputs, outputs, LINEAR, batch_normalize, adam);
     l.wz->batch = batch;
 
-    l.ur = (layer*)malloc(sizeof(layer));
+    l.ur = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.ur) = make_connected_layer(batch*steps, inputs, outputs, LINEAR, batch_normalize, adam);
     l.ur->batch = batch;
 
-    l.wr = (layer*)malloc(sizeof(layer));
+    l.wr = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.wr) = make_connected_layer(batch*steps, outputs, outputs, LINEAR, batch_normalize, adam);
     l.wr->batch = batch;
 
 
 
-    l.uh = (layer*)malloc(sizeof(layer));
+    l.uh = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.uh) = make_connected_layer(batch*steps, inputs, outputs, LINEAR, batch_normalize, adam);
     l.uh->batch = batch;
 
-    l.wh = (layer*)malloc(sizeof(layer));
+    l.wh = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.wh) = make_connected_layer(batch*steps, outputs, outputs, LINEAR, batch_normalize, adam);
     l.wh->batch = batch;
@@ -73,16 +73,16 @@ layer make_gru_layer(int batch, int inputs, int outputs, int steps, int batch_no
 
 
     l.outputs = outputs;
-    l.output = (float*)calloc(outputs*batch*steps, sizeof(float));
-    l.delta = (float*)calloc(outputs*batch*steps, sizeof(float));
-    l.state = (float*)calloc(outputs*batch, sizeof(float));
-    l.prev_state = (float*)calloc(outputs*batch, sizeof(float));
-    l.forgot_state = (float*)calloc(outputs*batch, sizeof(float));
-    l.forgot_delta =(float*) calloc(outputs*batch, sizeof(float));
+    l.output = (float*)ta_calloc(outputs*batch*steps, sizeof(float));
+    l.delta = (float*)ta_calloc(outputs*batch*steps, sizeof(float));
+    l.state = (float*)ta_calloc(outputs*batch, sizeof(float));
+    l.prev_state = (float*)ta_calloc(outputs*batch, sizeof(float));
+    l.forgot_state = (float*)ta_calloc(outputs*batch, sizeof(float));
+    l.forgot_delta =(float*) ta_calloc(outputs*batch, sizeof(float));
 
-    l.r_cpu = (float*)calloc(outputs*batch, sizeof(float));
-    l.z_cpu = (float*)calloc(outputs*batch, sizeof(float));
-    l.h_cpu = (float*)calloc(outputs*batch, sizeof(float));
+    l.r_cpu = (float*)ta_calloc(outputs*batch, sizeof(float));
+    l.z_cpu = (float*)ta_calloc(outputs*batch, sizeof(float));
+    l.h_cpu = (float*)ta_calloc(outputs*batch, sizeof(float));
 
     l.forward = forward_gru_layer;
     l.backward = backward_gru_layer;

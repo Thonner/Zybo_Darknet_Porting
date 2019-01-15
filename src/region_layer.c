@@ -26,14 +26,14 @@ layer make_region_layer(int batch, int w, int h, int n, int classes, int coords)
     l.out_c = l.c;
     l.classes = classes;
     l.coords = coords;
-    l.cost = (float*)calloc(1, sizeof(float));
-    l.biases = (float*)calloc(n*2, sizeof(float));
-    l.bias_updates = (float*)calloc(n*2, sizeof(float));
+    l.cost = (float*)ta_calloc(1, sizeof(float));
+    l.biases = (float*)ta_calloc(n*2, sizeof(float));
+    l.bias_updates = (float*)ta_calloc(n*2, sizeof(float));
     l.outputs = h*w*n*(classes + coords + 1);
     l.inputs = l.outputs;
     l.truths = 30*(l.coords + 1);
-    l.delta = (float*)calloc(batch*l.outputs, sizeof(float));
-    l.output = (float*)calloc(batch*l.outputs, sizeof(float));
+    l.delta = (float*)ta_calloc(batch*l.outputs, sizeof(float));
+    l.output = (float*)ta_calloc(batch*l.outputs, sizeof(float));
     int i;
     for(i = 0; i < n*2; ++i){
         l.biases[i] = .5;

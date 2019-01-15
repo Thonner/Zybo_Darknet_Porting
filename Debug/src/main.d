@@ -34,7 +34,7 @@ src/main.o src/main.o: ../src/main.cc \
  ../src/ov5640/AXI_VDMA.h ../src/ov5640/PS_IIC.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xiicps.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xiicps_hw.h \
- ../src/tinyalloc.h ../src/darknet.h ../src/tree.h \
+ ../src/darknet.h ../src/tree.h ../src/tinyalloc.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xtime_l.h \
  ../src/detector.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/sleep.h \
@@ -119,11 +119,11 @@ src/main.o src/main.o: ../src/main.cc \
 
 ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xiicps_hw.h:
 
-../src/tinyalloc.h:
-
 ../src/darknet.h:
 
 ../src/tree.h:
+
+../src/tinyalloc.h:
 
 ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xtime_l.h:
 

@@ -18,9 +18,9 @@ layer make_l2norm_layer(int batch, int inputs)
     l.batch = batch;
     l.inputs = inputs;
     l.outputs = inputs;
-    l.output = (float*)calloc(inputs*batch, sizeof(float));
-    l.scales = (float*)calloc(inputs*batch, sizeof(float));
-    l.delta = (float*)calloc(inputs*batch, sizeof(float));
+    l.output = (float*)ta_calloc(inputs*batch, sizeof(float));
+    l.scales = (float*)ta_calloc(inputs*batch, sizeof(float));
+    l.delta = (float*)ta_calloc(inputs*batch, sizeof(float));
 
     l.forward = forward_l2norm_layer;
     l.backward = backward_l2norm_layer;

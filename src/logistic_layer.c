@@ -18,10 +18,10 @@ layer make_logistic_layer(int batch, int inputs)
     l.batch = batch;
     l.inputs = inputs;
     l.outputs = inputs;
-    l.loss = (float*)calloc(inputs*batch, sizeof(float));
-    l.output = (float*)calloc(inputs*batch, sizeof(float));
-    l.delta = (float*)calloc(inputs*batch, sizeof(float));
-    l.cost =(float*) calloc(1, sizeof(float));
+    l.loss = (float*)ta_calloc(inputs*batch, sizeof(float));
+    l.output = (float*)ta_calloc(inputs*batch, sizeof(float));
+    l.delta = (float*)ta_calloc(inputs*batch, sizeof(float));
+    l.cost =(float*) ta_calloc(1, sizeof(float));
 
     l.forward = forward_logistic_layer;
     l.backward = backward_logistic_layer;

@@ -27,11 +27,11 @@ detection_layer make_detection_layer(int batch, int inputs, int n, int side, int
     l.w = side;
     l.h = side;
     assert(side*side*((1 + l.coords)*l.n + l.classes) == inputs);
-    l.cost = (float*)calloc(1, sizeof(float));
+    l.cost = (float*)ta_calloc(1, sizeof(float));
     l.outputs = l.inputs;
     l.truths = l.side*l.side*(1+l.coords+l.classes);
-    l.output = (float*)calloc(batch*l.outputs, sizeof(float));
-    l.delta = (float*)calloc(batch*l.outputs, sizeof(float));
+    l.output = (float*)ta_calloc(batch*l.outputs, sizeof(float));
+    l.delta = (float*)ta_calloc(batch*l.outputs, sizeof(float));
 
     l.forward = forward_detection_layer;
     l.backward = backward_detection_layer;
@@ -184,7 +184,7 @@ void forward_detection_layer(const detection_layer l, network net)
         }
 
         if(0){
-            float *costs = (float*)calloc(l.batch*locations*l.n, sizeof(float));
+            float *costs = (float*)ta_calloc(l.batch*locations*l.n, sizeof(float));
             for (b = 0; b < l.batch; ++b) {
                 int index = b*l.inputs;
                 for (i = 0; i < locations; ++i) {
@@ -206,7 +206,7 @@ void forward_detection_layer(const detection_layer l, network net)
                     }
                 }
             }
-            //free(costs);
+            ta_free(costs);
         }
 
 

@@ -25,19 +25,19 @@ layer make_iseg_layer(int batch, int w, int h, int classes, int ids)
     l.classes = classes;
     l.batch = batch;
     l.extra = ids;
-    l.cost = (float*)calloc(1, sizeof(float));
+    l.cost = (float*)ta_calloc(1, sizeof(float));
     l.outputs = h*w*l.c;
     l.inputs = l.outputs;
     l.truths = 90*(l.w*l.h+1);
-    l.delta = (float*)calloc(batch*l.outputs, sizeof(float));
-    l.output = (float*)calloc(batch*l.outputs, sizeof(float));
+    l.delta = (float*)ta_calloc(batch*l.outputs, sizeof(float));
+    l.output = (float*)ta_calloc(batch*l.outputs, sizeof(float));
 
-    l.counts = (int*)calloc(90, sizeof(int));
-    l.sums = (float**)calloc(90, sizeof(float*));
+    l.counts = (int*)ta_calloc(90, sizeof(int));
+    l.sums = (float**)ta_calloc(90, sizeof(float*));
     if(ids){
         int i;
         for(i = 0; i < 90; ++i){
-            l.sums[i] = (float*)calloc(ids, sizeof(float));
+            l.sums[i] = (float*)ta_calloc(ids, sizeof(float));
         }
     }
 
@@ -128,7 +128,7 @@ void forward_iseg_layer(const layer l, network net)
             }
         }
 
-        float *mse = (float*)calloc(90, sizeof(float));
+        float *mse = (float*)ta_calloc(90, sizeof(float));
         for(i = 0; i < 90; ++i){
             int c = net.truth[b*l.truths + i*(l.w*l.h+1)];
             if(c < 0) break;
@@ -159,7 +159,7 @@ void forward_iseg_layer(const layer l, network net)
                 printf("\n");
             }
         }
-        //free(mse);
+        ta_free(mse);
 
         // Calculate embedding loss
         for(i = 0; i < 90; ++i){

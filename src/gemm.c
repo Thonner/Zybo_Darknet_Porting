@@ -30,7 +30,7 @@ void gemm_bin(int M, int N, int K, float ALPHA,
 float *random_matrix(int rows, int cols)
 {
     int i;
-    float *m = (float*)calloc(rows*cols, sizeof(float));
+    float *m = (float*)ta_calloc(rows*cols, sizeof(float));
     for(i = 0; i < rows*cols; ++i){
         m[i] = (float)rand()/RAND_MAX;
     }
@@ -56,9 +56,9 @@ void time_random_matrix(int TA, int TB, int m, int k, int n)
     }
     end = clock();
     printf("Matrix Multiplication %dx%d * %dx%d, TA=%d, TB=%d: %lf ms\n",m,k,k,n, TA, TB, (float)(end-start)/CLOCKS_PER_SEC);
-    //free(a);
-    //free(b);
-    //free(c);
+    ta_free(a);
+    ta_free(b);
+    ta_free(c);
 }
 
 
@@ -205,9 +205,9 @@ void time_gpu_random_matrix(int TA, int TB, int m, int k, int n)
     }
     end = clock();
     printf("Matrix Multiplication %dx%d * %dx%d, TA=%d, TB=%d: %lf s\n",m,k,k,n, TA, TB, (float)(end-start)/CLOCKS_PER_SEC);
-    //free(a);
-    //free(b);
-    //free(c);
+    ta_free(a);
+    ta_free(b);
+    ta_free(c);
 }
 
 void time_gpu(int TA, int TB, int m, int k, int n)
@@ -236,12 +236,12 @@ void time_gpu(int TA, int TB, int m, int k, int n)
     end = clock();
     double seconds = sec(end-start);
     printf("Matrix Multiplication %dx%d * %dx%d, TA=%d, TB=%d: %lf s, %lf GFLOPS\n",m,k,k,n, TA, TB, seconds, gflop/seconds);
-    cuda_//free(a_cl);
-    cuda_//free(b_cl);
-    cuda_//free(c_cl);
-    //free(a);
-    //free(b);
-    //free(c);
+    cuda_ta_free(a_cl);
+    cuda_ta_free(b_cl);
+    cuda_ta_free(c_cl);
+    ta_free(a);
+    ta_free(b);
+    ta_free(c);
 }
 
 
@@ -276,10 +276,10 @@ void test_gpu_accuracy(int TA, int TB, int m, int k, int n)
         sse += pow(c[i]-c_gpu[i], 2);
     }
     printf("Matrix Multiplication %dx%d * %dx%d, TA=%d, TB=%d: %g SSE\n",m,k,k,n, TA, TB, sse/(m*n));
-    //free(a);
-    //free(b);
-    //free(c);
-    //free(c_gpu);
+    ta_free(a);
+    ta_free(b);
+    ta_free(c);
+    ta_free(c_gpu);
 }
 
 int test_gpu_blas()

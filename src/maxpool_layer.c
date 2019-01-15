@@ -36,9 +36,9 @@ maxpool_layer make_maxpool_layer(int batch, int h, int w, int c, int size, int s
     l.size = size;
     l.stride = stride;
     int output_size = l.out_h * l.out_w * l.out_c * batch;
-    l.indexes = (int*)calloc(output_size, sizeof(int));
-    l.output =  (float*)calloc(output_size, sizeof(float));
-    l.delta =   (float*)calloc(output_size, sizeof(float));
+    l.indexes = (int*)ta_calloc(output_size, sizeof(int));
+    l.output =  (float*)ta_calloc(output_size, sizeof(float));
+    l.delta =   (float*)ta_calloc(output_size, sizeof(float));
     l.forward = forward_maxpool_layer;
     l.backward = backward_maxpool_layer;
     #ifdef GPU

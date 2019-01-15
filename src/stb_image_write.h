@@ -35,7 +35,7 @@ BUILDING:
    You can #define STBIW_ZLIB_COMPRESS to use a custom zlib-style compress function
    for PNG compression (instead of the builtin one), it must have the following signature:
    unsigned char * my_compress(unsigned char *data, int data_len, int *out_len, int quality);
-   The returned data will be freed with STBIW_free() (//free() by default),
+   The returned data will be freed with STBIW_free() (ta_free() by default),
    so it must be heap allocated with STBIW_MALLOC() (malloc() by default),
 
 USAGE:

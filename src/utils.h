@@ -27,7 +27,7 @@ void write_all(int fd, char *buffer, size_t bytes);
 int read_all_fail(int fd, char *buffer, size_t bytes);
 int write_all_fail(int fd, char *buffer, size_t bytes);
 void find_replace(char *str, char *orig, char *rep, char *output);
-void malloc_error();
+void ta_alloc_error();
 void file_error(char *s);
 void strip(char *s);
 void strip_char(char *s, char bad);

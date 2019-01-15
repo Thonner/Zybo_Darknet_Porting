@@ -17,10 +17,10 @@ layer make_normalization_layer(int batch, int w, int h, int c, int size, float a
     layer.size = size;
     layer.alpha = alpha;
     layer.beta = beta;
-    layer.output = (float*)calloc(h * w * c * batch, sizeof(float));
-    layer.delta = (float*)calloc(h * w * c * batch, sizeof(float));
-    layer.squared = (float*)calloc(h * w * c * batch, sizeof(float));
-    layer.norms = (float*)calloc(h * w * c * batch, sizeof(float));
+    layer.output = (float*)ta_calloc(h * w * c * batch, sizeof(float));
+    layer.delta = (float*)ta_calloc(h * w * c * batch, sizeof(float));
+    layer.squared = (float*)ta_calloc(h * w * c * batch, sizeof(float));
+    layer.norms = (float*)ta_calloc(h * w * c * batch, sizeof(float));
     layer.inputs = w*h*c;
     layer.outputs = layer.inputs;
 

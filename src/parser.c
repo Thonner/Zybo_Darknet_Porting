@@ -60,12 +60,12 @@ typedef struct size_params{
 
 network *make_network(int n)
 {
-    network *net = (network*)calloc(1, sizeof(network));
+    network *net = (network*)ta_calloc(1, sizeof(network));
     net->n = n;
-    net->layers = (layer*)calloc(net->n, sizeof(layer));
-    net->seen = (size_t*)calloc(1, sizeof(size_t));
-    net->t    = (int*)calloc(1, sizeof(int));
-    net->cost = (float*)calloc(1, sizeof(float));
+    net->layers = (layer*)ta_calloc(net->n, sizeof(layer));
+    net->seen = (size_t*)ta_calloc(1, sizeof(size_t));
+    net->t    = (int*)ta_calloc(1, sizeof(int));
+    net->cost = (float*)ta_calloc(1, sizeof(float));
     return net;
 }
 
@@ -211,7 +211,7 @@ int *parse_yolo_mask(char *a, int *num)
         for(i = 0; i < len; ++i){
             if (a[i] == ',') ++n;
         }
-        mask = (int*)calloc(n, sizeof(int));
+        mask = (int*)ta_calloc(n, sizeof(int));
         for(i = 0; i < n; ++i){
             int val = atoi(a);
             mask[i] = val;
@@ -528,8 +528,8 @@ route_layer parse_route(list *options, size_params params, network *net)
         if (l[i] == ',') ++n;
     }
 
-    int *layers = (int*)calloc(n, sizeof(int));
-    int *sizes = (int*)calloc(n, sizeof(int));
+    int *layers = (int*)ta_calloc(n, sizeof(int));
+    int *sizes = (int*)ta_calloc(n, sizeof(int));
     for(i = 0; i < n; ++i){
         int index = atoi(l);
         l = strchr(l, ',')+1;
@@ -748,18 +748,18 @@ network *parse_network_cfg(){
 
 void free_section(section *s)
 {
-    ////free(s->type);
+    //ta_free(s->type);
     node *n = s->options->front;
     while(n){
         kvp *pair = (kvp *)n->val;
-        //free(pair->key);
-        //free(pair);
+        ta_free(pair->key);
+        ta_free(pair);
         node *next = n->next;
-        //free(n);
+        ta_free(n);
         n = next;
     }
-    //free(s->options);
-    //free(s);
+    ta_free(s->options);
+    ta_free(s);
 
 }
 
@@ -821,8 +821,8 @@ void parse_net_options(list *options, network *net){
 		for(i = 0; i < len; ++i){
 			if (l[i] == ',') ++n;
 		}
-		int *steps = (int*)calloc(n, sizeof(int));
-		float *scales = (float*)calloc(n, sizeof(float));
+		int *steps = (int*)ta_calloc(n, sizeof(int));
+		float *scales = (float*)ta_calloc(n, sizeof(float));
 		for(i = 0; i < n; ++i){
 			int step    = atoi(l);
 			float scale = atof(p);
@@ -850,12 +850,12 @@ list *read_cfg(){
 
 	section *current = 0;
 
-	/*current = (section*)malloc(sizeof(section));
+	/*current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();*/
 
 	line = "[net]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -881,7 +881,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -896,7 +896,7 @@ list *read_cfg(){
 
 
 	line = "[maxpool]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -907,7 +907,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -922,7 +922,7 @@ list *read_cfg(){
 
 
 	line = "[maxpool]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -933,7 +933,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -948,7 +948,7 @@ list *read_cfg(){
 
 
 	line = "[maxpool]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -959,7 +959,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -974,7 +974,7 @@ list *read_cfg(){
 
 
 	line = "[maxpool]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -985,7 +985,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1000,7 +1000,7 @@ list *read_cfg(){
 
 
 	line = "[maxpool]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1011,7 +1011,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1026,7 +1026,7 @@ list *read_cfg(){
 
 
 	line = "[maxpool]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1037,7 +1037,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1052,7 +1052,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1067,7 +1067,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1082,7 +1082,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1096,7 +1096,7 @@ list *read_cfg(){
 
 
 	line = "[yolo]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1113,7 +1113,7 @@ list *read_cfg(){
 
 
 	line = "[route]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1123,7 +1123,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1138,7 +1138,7 @@ list *read_cfg(){
 
 
 	line = "[upsample]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1148,7 +1148,7 @@ list *read_cfg(){
 
 
 	line = "[route]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1158,7 +1158,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1173,7 +1173,7 @@ list *read_cfg(){
 
 
 	line = "[convolutional]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;
@@ -1187,7 +1187,7 @@ list *read_cfg(){
 
 
 	line = "[yolo]";
-	current = (section*)malloc(sizeof(section));
+	current = (section*)ta_alloc(sizeof(section));
 	list_insert(options, current);
 	current->options = make_list();
 	current->type = line;

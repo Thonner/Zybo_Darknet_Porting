@@ -120,7 +120,7 @@ RECENT REVISION HISTORY:
 //    // ... x = width, y = height, n = # 8-bit components per pixel ...
 //    // ... replace '0' with '1'..'4' to force that many components per pixel
 //    // ... but 'n' will always be the number that it would have been if you said 0
-//    stbi_image_//free(data)
+//    stbi_image_ta_free(data)
 //
 // Standard parameters:
 //    int *x                 -- outputs image width in pixels
@@ -416,7 +416,7 @@ STBIDEF int      stbi_is_hdr_from_file(FILE *f);
 // NOT THREADSAFE
 STBIDEF const char *stbi_failure_reason  (void);
 
-// free the loaded image -- this is just //free()
+// free the loaded image -- this is just ta_free()
 STBIDEF void     stbi_image_free      (void *retval_from_stbi_load);
 
 // get image dimensions & components without fully decoding
@@ -580,7 +580,7 @@ typedef unsigned char validate_uint32[sizeof(stbi__uint32)==4 ? 1 : -1];
 #ifndef STBI_MALLOC
 #define STBI_MALLOC(sz)           malloc(sz)
 #define STBI_REALLOC(p,newsz)     realloc(p,newsz)
-#define STBI_free(p)              //free(p)
+#define STBI_free(p)              ta_free(p)
 #endif
 
 #ifndef STBI_REALLOC_SIZED
@@ -4641,7 +4641,7 @@ static int stbi__expand_png_palette(stbi__png *a, stbi_uc *palette, int len, int
    p = (stbi_uc *) stbi__malloc_mad2(pixel_count, pal_img_n, 0);
    if (p == NULL) return stbi__err("outofmem", "Out of memory");
 
-   // between here and //free(out) below, exitting would leak
+   // between here and ta_free(out) below, exitting would leak
    temp_out = p;
 
    if (pal_img_n == 3) {

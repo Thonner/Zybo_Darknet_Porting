@@ -13,25 +13,25 @@ layer make_batchnorm_layer(int batch, int w, int h, int c)
     l.h = l.out_h = h;
     l.w = l.out_w = w;
     l.c = l.out_c = c;
-    l.output = (float*)calloc(h * w * c * batch, sizeof(float));
-    l.delta  = (float*)calloc(h * w * c * batch, sizeof(float));
+    l.output = (float*)ta_calloc(h * w * c * batch, sizeof(float));
+    l.delta  = (float*)ta_calloc(h * w * c * batch, sizeof(float));
     l.inputs = w*h*c;
     l.outputs = l.inputs;
 
-    l.scales = (float*)calloc(c, sizeof(float));
-    l.scale_updates = (float*)calloc(c, sizeof(float));
-    l.biases = (float*)calloc(c, sizeof(float));
-    l.bias_updates = (float*)calloc(c, sizeof(float));
+    l.scales = (float*)ta_calloc(c, sizeof(float));
+    l.scale_updates = (float*)ta_calloc(c, sizeof(float));
+    l.biases = (float*)ta_calloc(c, sizeof(float));
+    l.bias_updates = (float*)ta_calloc(c, sizeof(float));
     int i;
     for(i = 0; i < c; ++i){
         l.scales[i] = 1;
     }
 
-    l.mean = (float*)calloc(c, sizeof(float));
-    l.variance = (float*)calloc(c, sizeof(float));
+    l.mean = (float*)ta_calloc(c, sizeof(float));
+    l.variance = (float*)ta_calloc(c, sizeof(float));
 
-    l.rolling_mean = (float*)calloc(c, sizeof(float));
-    l.rolling_variance = (float*)calloc(c, sizeof(float));
+    l.rolling_mean = (float*)ta_calloc(c, sizeof(float));
+    l.rolling_variance = (float*)ta_calloc(c, sizeof(float));
 
     l.forward = forward_batchnorm_layer;
     l.backward = backward_batchnorm_layer;

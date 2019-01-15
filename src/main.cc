@@ -6,7 +6,7 @@
 #include "ov5640/PS_GPIO.h"
 #include "ov5640/AXI_VDMA.h"
 #include "ov5640/PS_IIC.h"
-#include "tinyalloc.h"
+
 
 #include "darknet.h"
 #include "detector.h"

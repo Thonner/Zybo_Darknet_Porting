@@ -13,6 +13,7 @@
 #include "tree.h"
 //#include <pthread.h>
 #include "tree.h"
+#include "tinyalloc.h"
 
 #include "xtime_l.h"
 

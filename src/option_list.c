@@ -13,7 +13,7 @@
 
 void option_insert(list *l, char *key, char *val)
 {
-    kvp *p = (kvp*)malloc(sizeof(kvp));
+    kvp *p = (kvp*)ta_alloc(sizeof(kvp));
     p->key = key;
     p->val = val;
     p->used = 0;

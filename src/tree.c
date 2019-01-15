@@ -92,7 +92,7 @@ tree *read_tree(char *filename)
     int groups = 0;
     int n = 0;
     while((line=fgetl(fp)) != 0){
-        char *id = (char*)calloc(256, sizeof(char));
+        char *id = (char*)ta_calloc(256, sizeof(char));
         int parent = -1;
         sscanf(line, "%s %d", id, &parent);
         t.parent = (int*)realloc(t.parent, (n+1)*sizeof(int));
@@ -127,13 +127,13 @@ tree *read_tree(char *filename)
     t.group_size[groups - 1] = group_size;
     t.n = n;
     t.groups = groups;
-    t.leaf = (int*)calloc(n, sizeof(int));
+    t.leaf = (int*)ta_calloc(n, sizeof(int));
     int i;
     for(i = 0; i < n; ++i) t.leaf[i] = 1;
     for(i = 0; i < n; ++i) if(t.parent[i] >= 0) t.leaf[t.parent[i]] = 0;
 
     fclose(fp);
-    tree *tree_ptr = (tree*)calloc(1, sizeof(tree));
+    tree *tree_ptr = (tree*)ta_calloc(1, sizeof(tree));
     *tree_ptr = t;
     //error(0);
     return tree_ptr;

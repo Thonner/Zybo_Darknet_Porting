@@ -19,8 +19,8 @@ layer make_activation_layer(int batch, int inputs, ACTIVATION activation)
     l.outputs = inputs;
     l.batch=batch;
 
-    l.output = (float*)calloc(batch*inputs, sizeof(float*));
-    l.delta = (float*)calloc(batch*inputs, sizeof(float*));
+    l.output = (float*)ta_calloc(batch*inputs, sizeof(float*));
+    l.delta = (float*)ta_calloc(batch*inputs, sizeof(float*));
 
     l.forward = forward_activation_layer;
     l.backward = backward_activation_layer;

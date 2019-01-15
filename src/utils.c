@@ -51,13 +51,13 @@ int *read_intlist(char *gpu_list, int *ngpus, int d)
         for(i = 0; i < len; ++i){
             if (gpu_list[i] == ',') ++*ngpus;
         }
-        gpus = (int*)calloc(*ngpus, sizeof(int));
+        gpus = (int*)ta_calloc(*ngpus, sizeof(int));
         for(i = 0; i < *ngpus; ++i){
             gpus[i] = atoi(gpu_list);
             gpu_list = strchr(gpu_list, ',')+1;
         }
     } else {
-        gpus = (int*)calloc(1, sizeof(float));
+        gpus = (int*)ta_calloc(1, sizeof(float));
         *gpus = d;
         *ngpus = 1;
     }
@@ -104,7 +104,7 @@ void shuffle(void *arr, size_t n, size_t size)
 
 int *random_index_order(int min, int max)
 {
-    int *inds = (int*)calloc(max-min, sizeof(int));
+    int *inds = (int*)ta_calloc(max-min, sizeof(int));
     int i;
     for(i = min; i < max; ++i){
         inds[i] = i;
@@ -274,7 +274,7 @@ unsigned char *read_file(char *filename)
     size = ftell(fp);
     fseek(fp, 0, SEEK_SET); 
 
-    unsigned char *text = (unsigned char*)calloc(size+1, sizeof(char));
+    unsigned char *text = (unsigned char*)ta_calloc(size+1, sizeof(char));
     fread(text, 1, size, fp);
     fclose(fp);
     return text;
@@ -282,7 +282,7 @@ unsigned char *read_file(char *filename)
 
 void malloc_error()
 {
-    fprintf(stderr, "Malloc error\n");
+    fprintf(stderr, "ta_alloc error\n");
     exit(-1);
 }
 
@@ -336,17 +336,17 @@ void strip_char(char *s, char bad)
 void free_ptrs(void **ptrs, int n)
 {
     int i;/*
-    for(i = 0; i < n; ++i) //free(ptrs[i]);
-    //free(ptrs);*/
+    for(i = 0; i < n; ++i) ta_free(ptrs[i]);
+    ta_free(ptrs);*/
 }
 
 char *fgetl(FILE *fp)
 {
     if(feof(fp)) return 0;
     size_t size = 512;
-    char *line = (char*)malloc(size*sizeof(char));
+    char *line = (char*)ta_alloc(size*sizeof(char));
     if(!fgets(line, size, fp)){
-        //free(line);
+        ta_free(line);
         return 0;
     }
 
@@ -430,7 +430,7 @@ void write_all(int fd, char *buffer, size_t bytes)
 
 char *copy_string(char *s)
 {
-    char *copy = (char*)malloc(strlen(s)+1);
+    char *copy = (char*)ta_alloc(strlen(s)+1);
     strncpy(copy, s, strlen(s)+1);
     return copy;
 }
@@ -466,7 +466,7 @@ int count_fields(char *line)
 
 float *parse_fields(char *line, int n)
 {
-    float *field = (float*)calloc(n, sizeof(float));
+    float *field = (float*)ta_calloc(n, sizeof(float));
     char *c, *p, *end;
     int count = 0;
     int done = 0;
@@ -723,9 +723,9 @@ float rand_scale(float s)
 float **one_hot_encode(float *a, int n, int k)
 {
     int i;
-    float **t = (float**)calloc(n, sizeof(float*));
+    float **t = (float**)ta_calloc(n, sizeof(float*));
     for(i = 0; i < n; ++i){
-        t[i] = (float*)calloc(k, sizeof(float));
+        t[i] = (float*)ta_calloc(k, sizeof(float));
         int index = (int)a[i];
         t[i][index] = 1;
     }

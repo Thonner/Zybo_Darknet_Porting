@@ -1,5 +1,6 @@
 src/l2norm_layer.o src/l2norm_layer.o: ../src/l2norm_layer.c \
  ../src/l2norm_layer.h ../src/layer.h ../src/darknet.h ../src/tree.h \
+ ../src/tinyalloc.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xtime_l.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xil_types.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xparameters.h \
@@ -13,6 +14,8 @@ src/l2norm_layer.o src/l2norm_layer.o: ../src/l2norm_layer.c \
 ../src/darknet.h:
 
 ../src/tree.h:
+
+../src/tinyalloc.h:
 
 ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xtime_l.h:
 

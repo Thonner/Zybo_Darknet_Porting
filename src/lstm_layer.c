@@ -37,42 +37,42 @@ layer make_lstm_layer(int batch, int inputs, int outputs, int steps, int batch_n
     l.steps = steps;
     l.inputs = inputs;
 
-    l.uf = (layer*)malloc(sizeof(layer));
+    l.uf = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.uf) = make_connected_layer(batch*steps, inputs, outputs, LINEAR, batch_normalize, adam);
     l.uf->batch = batch;
 
-    l.ui = (layer*)malloc(sizeof(layer));
+    l.ui = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.ui) = make_connected_layer(batch*steps, inputs, outputs, LINEAR, batch_normalize, adam);
     l.ui->batch = batch;
 
-    l.ug = (layer*)malloc(sizeof(layer));
+    l.ug = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.ug) = make_connected_layer(batch*steps, inputs, outputs, LINEAR, batch_normalize, adam);
     l.ug->batch = batch;
 
-    l.uo = (layer*)malloc(sizeof(layer));
+    l.uo = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.uo) = make_connected_layer(batch*steps, inputs, outputs, LINEAR, batch_normalize, adam);
     l.uo->batch = batch;
 
-    l.wf = (layer*)malloc(sizeof(layer));
+    l.wf = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.wf) = make_connected_layer(batch*steps, outputs, outputs, LINEAR, batch_normalize, adam);
     l.wf->batch = batch;
 
-    l.wi = (layer*)malloc(sizeof(layer));
+    l.wi = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.wi) = make_connected_layer(batch*steps, outputs, outputs, LINEAR, batch_normalize, adam);
     l.wi->batch = batch;
 
-    l.wg = (layer*)malloc(sizeof(layer));
+    l.wg = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.wg) = make_connected_layer(batch*steps, outputs, outputs, LINEAR, batch_normalize, adam);
     l.wg->batch = batch;
 
-    l.wo = (layer*)malloc(sizeof(layer));
+    l.wo = (layer*)ta_alloc(sizeof(layer));
     fprintf(stderr, "\t\t");
     *(l.wo) = make_connected_layer(batch*steps, outputs, outputs, LINEAR, batch_normalize, adam);
     l.wo->batch = batch;
@@ -80,27 +80,27 @@ layer make_lstm_layer(int batch, int inputs, int outputs, int steps, int batch_n
     l.batch_normalize = batch_normalize;
     l.outputs = outputs;
 
-    l.output = (float*)calloc(outputs*batch*steps, sizeof(float));
-    l.state = (float*)calloc(outputs*batch, sizeof(float));
+    l.output = (float*)ta_calloc(outputs*batch*steps, sizeof(float));
+    l.state = (float*)ta_calloc(outputs*batch, sizeof(float));
 
     l.forward = forward_lstm_layer;
     l.update = update_lstm_layer;
 
-    l.prev_state_cpu =  (float*)calloc(batch*outputs, sizeof(float));
-    l.prev_cell_cpu =   (float*)calloc(batch*outputs, sizeof(float));
-    l.cell_cpu =        (float*)calloc(batch*outputs*steps, sizeof(float));
+    l.prev_state_cpu =  (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.prev_cell_cpu =   (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.cell_cpu =        (float*)ta_calloc(batch*outputs*steps, sizeof(float));
 
-    l.f_cpu =           (float*)calloc(batch*outputs, sizeof(float));
-    l.i_cpu =           (float*)calloc(batch*outputs, sizeof(float));
-    l.g_cpu =           (float*)calloc(batch*outputs, sizeof(float));
-    l.o_cpu =           (float*)calloc(batch*outputs, sizeof(float));
-    l.c_cpu =           (float*)calloc(batch*outputs, sizeof(float));
-    l.h_cpu =           (float*)calloc(batch*outputs, sizeof(float));
-    l.temp_cpu =        (float*)calloc(batch*outputs, sizeof(float));
-    l.temp2_cpu =       (float*)calloc(batch*outputs, sizeof(float));
-    l.temp3_cpu =       (float*)calloc(batch*outputs, sizeof(float));
-    l.dc_cpu =          (float*)calloc(batch*outputs, sizeof(float));
-    l.dh_cpu =          (float*)calloc(batch*outputs, sizeof(float));
+    l.f_cpu =           (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.i_cpu =           (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.g_cpu =           (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.o_cpu =           (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.c_cpu =           (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.h_cpu =           (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.temp_cpu =        (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.temp2_cpu =       (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.temp3_cpu =       (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.dc_cpu =          (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.dh_cpu =          (float*)ta_calloc(batch*outputs, sizeof(float));
 
 #ifdef GPU
     l.forward_gpu = forward_lstm_layer_gpu;

@@ -30,14 +30,14 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
     l.out_w = 1;
     l.out_c = outputs;
 
-    l.output = (float*)calloc(batch*outputs, sizeof(float));
-    l.delta = (float*)calloc(batch*outputs, sizeof(float));
+    l.output = (float*)ta_calloc(batch*outputs, sizeof(float));
+    l.delta = (float*)ta_calloc(batch*outputs, sizeof(float));
 
-    l.weight_updates = (float*)calloc(inputs*outputs, sizeof(float));
-    l.bias_updates = (float*)calloc(outputs, sizeof(float));
+    l.weight_updates = (float*)ta_calloc(inputs*outputs, sizeof(float));
+    l.bias_updates = (float*)ta_calloc(outputs, sizeof(float));
 
-    l.weights = (float*)calloc(outputs*inputs, sizeof(float));
-    l.biases = (float*)calloc(outputs, sizeof(float));
+    l.weights = (float*)ta_calloc(outputs*inputs, sizeof(float));
+    l.biases = (float*)ta_calloc(outputs, sizeof(float));
 
     l.forward = forward_connected_layer;
     l.backward = backward_connected_layer;
@@ -54,30 +54,30 @@ layer make_connected_layer(int batch, int inputs, int outputs, ACTIVATION activa
     }
 
     if(adam){
-        l.m = (float*)calloc(l.inputs*l.outputs, sizeof(float));
-        l.v = (float*)calloc(l.inputs*l.outputs, sizeof(float));
-        l.bias_m = (float*)calloc(l.outputs, sizeof(float));
-        l.scale_m = (float*)calloc(l.outputs, sizeof(float));
-        l.bias_v = (float*)calloc(l.outputs, sizeof(float));
-        l.scale_v = (float*)calloc(l.outputs, sizeof(float));
+        l.m = (float*)ta_calloc(l.inputs*l.outputs, sizeof(float));
+        l.v = (float*)ta_calloc(l.inputs*l.outputs, sizeof(float));
+        l.bias_m = (float*)ta_calloc(l.outputs, sizeof(float));
+        l.scale_m = (float*)ta_calloc(l.outputs, sizeof(float));
+        l.bias_v = (float*)ta_calloc(l.outputs, sizeof(float));
+        l.scale_v = (float*)ta_calloc(l.outputs, sizeof(float));
     }
     if(batch_normalize){
-        l.scales = (float*)calloc(outputs, sizeof(float));
-        l.scale_updates = (float*)calloc(outputs, sizeof(float));
+        l.scales = (float*)ta_calloc(outputs, sizeof(float));
+        l.scale_updates = (float*)ta_calloc(outputs, sizeof(float));
         for(i = 0; i < outputs; ++i){
             l.scales[i] = 1;
         }
 
-        l.mean = (float*)calloc(outputs, sizeof(float));
-        l.mean_delta = (float*)calloc(outputs, sizeof(float));
-        l.variance = (float*)calloc(outputs, sizeof(float));
-        l.variance_delta = (float*)calloc(outputs, sizeof(float));
+        l.mean = (float*)ta_calloc(outputs, sizeof(float));
+        l.mean_delta = (float*)ta_calloc(outputs, sizeof(float));
+        l.variance = (float*)ta_calloc(outputs, sizeof(float));
+        l.variance_delta = (float*)ta_calloc(outputs, sizeof(float));
 
-        l.rolling_mean = (float*)calloc(outputs, sizeof(float));
-        l.rolling_variance = (float*)calloc(outputs, sizeof(float));
+        l.rolling_mean = (float*)ta_calloc(outputs, sizeof(float));
+        l.rolling_variance = (float*)ta_calloc(outputs, sizeof(float));
 
-        l.x = (float*)calloc(batch*outputs, sizeof(float));
-        l.x_norm = (float*)calloc(batch*outputs, sizeof(float));
+        l.x = (float*)ta_calloc(batch*outputs, sizeof(float));
+        l.x_norm = (float*)ta_calloc(batch*outputs, sizeof(float));
     }
 
 #ifdef GPU
