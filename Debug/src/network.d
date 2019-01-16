@@ -4,7 +4,7 @@ src/network.o src/network.o: ../src/network.c ../src/darknet.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xil_types.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xparameters.h \
  ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xparameters_ps.h \
- ../src/parser.h
+ ../src/parser.h ../src/network.h ../src/yolo_layer.h ../src/layer.h
 
 ../src/darknet.h:
 
@@ -21,3 +21,9 @@ src/network.o src/network.o: ../src/network.c ../src/darknet.h \
 ../../pcam_vdma_hdmi_bsp/ps7_cortexa9_0/include/xparameters_ps.h:
 
 ../src/parser.h:
+
+../src/network.h:
+
+../src/yolo_layer.h:
+
+../src/layer.h:

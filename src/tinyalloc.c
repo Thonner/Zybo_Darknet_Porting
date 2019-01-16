@@ -14,11 +14,11 @@
 #endif
 
 #ifndef TA_HEAP_LIMIT
-#define TA_HEAP_LIMIT (0x8100000)
+#define TA_HEAP_LIMIT (0x10100000)
 #endif
 
 #ifndef TA_HEAP_BLOCKS
-#define TA_HEAP_BLOCKS 1024
+#define TA_HEAP_BLOCKS 2048
 #endif
 
 #ifndef TA_SPLIT_THRESH
@@ -281,4 +281,10 @@ size_t ta_num_fresh() {
 
 bool ta_check() {
     return TA_HEAP_BLOCKS == ta_num_free() + ta_num_used() + ta_num_fresh();
+}
+
+void *ta_realloc(void *free, size_t num){
+	ta_free(free);
+	return ta_alloc(num);
+
 }

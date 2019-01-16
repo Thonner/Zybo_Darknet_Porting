@@ -95,24 +95,24 @@ tree *read_tree(char *filename)
         char *id = (char*)ta_calloc(256, sizeof(char));
         int parent = -1;
         sscanf(line, "%s %d", id, &parent);
-        t.parent = (int*)realloc(t.parent, (n+1)*sizeof(int));
+        t.parent = (int*)ta_realloc(t.parent, (n+1)*sizeof(int));
         t.parent[n] = parent;
 
-        t.child = (int*)realloc(t.child, (n+1)*sizeof(int));
+        t.child = (int*)ta_realloc(t.child, (n+1)*sizeof(int));
         t.child[n] = -1;
 
-        t.name = (char**)realloc(t.name, (n+1)*sizeof(char *));
+        t.name = (char**)ta_realloc(t.name, (n+1)*sizeof(char *));
         t.name[n] = id;
         if(parent != last_parent){
             ++groups;
-            t.group_offset = (int*)realloc(t.group_offset, groups * sizeof(int));
+            t.group_offset = (int*)ta_realloc(t.group_offset, groups * sizeof(int));
             t.group_offset[groups - 1] = n - group_size;
-            t.group_size = (int*)realloc(t.group_size, groups * sizeof(int));
+            t.group_size = (int*)ta_realloc(t.group_size, groups * sizeof(int));
             t.group_size[groups - 1] = group_size;
             group_size = 0;
             last_parent = parent;
         }
-        t.group = (int*)realloc(t.group, (n+1)*sizeof(int));
+        t.group = (int*)ta_realloc(t.group, (n+1)*sizeof(int));
         t.group[n] = groups;
         if (parent >= 0) {
             t.child[parent] = groups;
@@ -121,9 +121,9 @@ tree *read_tree(char *filename)
         ++group_size;
     }
     ++groups;
-    t.group_offset = (int*)realloc(t.group_offset, groups * sizeof(int));
+    t.group_offset = (int*)ta_realloc(t.group_offset, groups * sizeof(int));
     t.group_offset[groups - 1] = n - group_size;
-    t.group_size = (int*)realloc(t.group_size, groups * sizeof(int));
+    t.group_size = (int*)ta_realloc(t.group_size, groups * sizeof(int));
     t.group_size[groups - 1] = group_size;
     t.n = n;
     t.groups = groups;

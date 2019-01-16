@@ -73,7 +73,7 @@ int *read_map(char *filename)
     if(!file) file_error(filename);
     while((str=fgetl(file))){
         ++n;
-        map = (int*)realloc(map, n*sizeof(int));
+        map = (int*)ta_realloc(map, n*sizeof(int));
         map[n-1] = atoi(str);
     }
     return map;
@@ -355,7 +355,7 @@ char *fgetl(FILE *fp)
     while((line[curr-1] != '\n') && !feof(fp)){
         if(curr == size-1){
             size *= 2;
-            line = (char*)realloc(line, size*sizeof(char));
+            line = (char*)ta_realloc(line, size*sizeof(char));
             if(!line) {
                 printf("%ld\n", size);
                 malloc_error();

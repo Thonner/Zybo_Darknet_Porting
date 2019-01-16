@@ -23,11 +23,13 @@ _UNDEF_STACK_SIZE = DEFINED(_UNDEF_STACK_SIZE) ? _UNDEF_STACK_SIZE : 1024;
 
 MEMORY
 {
-   ps7_ddr_0 : ORIGIN = 0x8100000, LENGTH = 0x37F00000
+   ps7_ddr_0 : ORIGIN = 0x10100000, LENGTH = 0x2D509D00
    ps7_qspi_linear_0 : ORIGIN = 0xFC000000, LENGTH = 0x1000000
    ps7_ram_0 : ORIGIN = 0x0, LENGTH = 0x30000
    ps7_ram_1 : ORIGIN = 0xFFFF0000, LENGTH = 0xFE00
-   TA_alloc  : ORIGIN = 0x100000, LENGTH = 0x8000000
+   TA_alloc  : ORIGIN = 0x100000, LENGTH = 0x10000000
+   weights  : ORIGIN = 0x3D9DA600, LENGTH = 0x2625A00
+   preloadedPhoto  : ORIGIN = 0x3D609D00, LENGTH = 0x3D0900
 }
 
 /* Specify the default entry point to the program */

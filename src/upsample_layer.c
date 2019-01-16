@@ -54,8 +54,8 @@ void resize_upsample_layer(layer *l, int w, int h)
     }
     l->outputs = l->out_w*l->out_h*l->out_c;
     l->inputs = l->h*l->w*l->c;
-    l->delta =  (float*)realloc(l->delta, l->outputs*l->batch*sizeof(float));
-    l->output = (float*)realloc(l->output, l->outputs*l->batch*sizeof(float));
+    l->delta =  (float*)ta_realloc(l->delta, l->outputs*l->batch*sizeof(float));
+    l->output = (float*)ta_realloc(l->output, l->outputs*l->batch*sizeof(float));
 
 #ifdef GPU
     cuda_free(l->output_gpu);

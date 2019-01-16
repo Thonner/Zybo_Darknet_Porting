@@ -236,7 +236,7 @@ image **load_alphabet()
     return alphabets;
 }
 
-void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes)
+void draw_detections(image im, detection *dets, int num, float thresh, char **names,/* image **alphabet,*/ int classes)
 {
     int i,j;
 
@@ -259,7 +259,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 }
                 printf("%s: %.0f%%\n", names[j], dets[i].prob[j]*100);
             }
-        }
+        }/*
         if(classs >= 0){
             int width = im.h * .006;
 
@@ -269,7 +269,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                alphabet = 0;
                }
              */
-
+        	/*
             //printf("%d %s: %.0f%%\n", i, names[class], prob*100);
             int offset = classs*123457 % classes;
             float red = get_color(2,offset,classes);
@@ -310,7 +310,7 @@ void draw_detections(image im, detection *dets, int num, float thresh, char **na
                 free_image(resized_mask);
                 free_image(tmask);
             }
-        }
+        }*/
     }
 }
 

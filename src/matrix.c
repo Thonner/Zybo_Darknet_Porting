@@ -52,7 +52,7 @@ matrix resize_matrix(matrix m, int size)
     int i;
     if (m.rows == size) return m;
     if (m.rows < size) {
-        m.vals = (float**)realloc(m.vals, size*sizeof(float*));
+        m.vals = (float**)ta_realloc(m.vals, size*sizeof(float*));
         for (i = m.rows; i < size; ++i) {
             m.vals[i] = (float*)ta_calloc(m.cols, sizeof(float));
         }
@@ -60,7 +60,7 @@ matrix resize_matrix(matrix m, int size)
         for (i = size; i < m.rows; ++i) {
             ta_free(m.vals[i]);
         }
-        m.vals = (float**)realloc(m.vals, size*sizeof(float*));
+        m.vals = (float**)ta_realloc(m.vals, size*sizeof(float*));
     }
     m.rows = size;
     return m;
@@ -150,13 +150,13 @@ matrix csv_to_matrix(char *filename)
         if(m.cols == -1) m.cols = count_fields(line);
         if(n == size){
             size *= 2;
-            m.vals = (float**)realloc(m.vals, size*sizeof(float*));
+            m.vals = (float**)ta_realloc(m.vals, size*sizeof(float*));
         }
         m.vals[n] = parse_fields(line, m.cols);
         ta_free(line);
         ++n;
     }
-    m.vals = (float**)realloc(m.vals, n*sizeof(float*));
+    m.vals = (float**)ta_realloc(m.vals, n*sizeof(float*));
     m.rows = n;
     return m;
 }

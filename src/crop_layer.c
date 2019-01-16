@@ -57,7 +57,7 @@ void resize_crop_layer(layer *l, int w, int h)
     l->inputs = l->w * l->h * l->c;
     l->outputs = l->out_h * l->out_w * l->out_c;
 
-    l->output = (float*)realloc(l->output, l->batch*l->outputs*sizeof(float));
+    l->output = (float*)ta_realloc(l->output, l->batch*l->outputs*sizeof(float));
     #ifdef GPU
     cuda_free(l->output_gpu);
     l->output_gpu = cuda_make_array(l->output, l->outputs*l->batch);

@@ -64,8 +64,8 @@ void resize_iseg_layer(layer *l, int w, int h)
     l->outputs = h*w*l->c;
     l->inputs = l->outputs;
 
-    l->output = (float*)realloc(l->output, l->batch*l->outputs*sizeof(float));
-    l->delta = (float*)realloc(l->delta, l->batch*l->outputs*sizeof(float));
+    l->output = (float*)ta_realloc(l->output, l->batch*l->outputs*sizeof(float));
+    l->delta = (float*)ta_realloc(l->delta, l->batch*l->outputs*sizeof(float));
 
 #ifdef GPU
     cuda_free(l->delta_gpu);

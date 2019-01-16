@@ -9,7 +9,7 @@
 #define SRC_NETWORK_H_
 #include "darknet.h"
 network *load_network();
-
+void calc_network_cost(network *net);
 
 
 #endif /* SRC_NETWORK_H_ */

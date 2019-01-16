@@ -99,27 +99,6 @@ int main()
 
 	ta_init();
 
-	int *a = (int*)ta_alloc(104857600);
-
-	for(int i = 0; i < 104857600/4; i++){
-		a[i] = i;
-
-	}
-	for(int i = 0; i < 104857600/4; i++){
-		if(a[i] != i){
-			printf("ERROR: %d\n", a[i]);
-
-		}
-
-	}
-
-
-	int *b = (int*)ta_alloc(104857600);
-
-	ta_free(a);
-
-	b = (int*)ta_alloc(104857600);
-
 
 	// Liquid lens control
 	uint8_t read_char0 = 0;

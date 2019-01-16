@@ -636,6 +636,22 @@ image crop_image(image im, int dx, int dy, int w, int h);
 image center_crop_image(image im, int w, int h);
 image resize_min(image im, int min);
 
+layer get_network_output_layer(network *net);
+void load_weights(network *net);
+void load_weights_upto(network *net, int start, int cutoff);
+void set_batch_network(network *net, int b);
+float *network_predict(network *net, float *input);
+void forward_network(network *net);
+detection *get_network_boxes(network *net, int w, int h, float thresh, float hier, int *map, int relative, int *num);
+void do_nms_sort(detection *dets, int total, int classes, float thresh);
+void draw_detections(image im, detection *dets, int num, float thresh, char **names, image **alphabet, int classes);
+void free_detections(detection *dets, int n);
+int get_yolo_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, int relative, detection *dets);
+void get_region_detections(layer l, int w, int h, int netw, int neth, float thresh, int *map, float tree_thresh, int relative, detection *dets);
+void get_detection_detections(layer l, int w, int h, float thresh, detection *dets);
+void draw_detections(image im, detection *dets, int num, float thresh, char **names,/* image **alphabet,*/ int classes);
+
+
 void free_network(network *net);
 void set_batch_network(network *net, int b);
 void set_temp_network(network *net, float t);

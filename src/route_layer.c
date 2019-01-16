@@ -60,8 +60,8 @@ void resize_route_layer(route_layer *l, network *net)
         }
     }
     l->inputs = l->outputs;
-    l->delta =  (float*)realloc(l->delta, l->outputs*l->batch*sizeof(float));
-    l->output = (float*)realloc(l->output, l->outputs*l->batch*sizeof(float));
+    l->delta =  (float*)ta_realloc(l->delta, l->outputs*l->batch*sizeof(float));
+    l->output = (float*)ta_realloc(l->output, l->outputs*l->batch*sizeof(float));
 
 #ifdef GPU
     cuda_free(l->output_gpu);

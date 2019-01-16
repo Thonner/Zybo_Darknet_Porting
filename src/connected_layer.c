@@ -169,6 +169,7 @@ void forward_connected_layer(layer l, network net)
 
 void backward_connected_layer(layer l, network net)
 {
+
     gradient_array(l.output, l.outputs*l.batch, l.activation, l.delta);
 
     if(l.batch_normalize){

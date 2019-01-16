@@ -78,8 +78,8 @@ void resize_reorg_layer(layer *l, int w, int h)
     l->inputs = l->outputs;
     int output_size = l->outputs * l->batch;
 
-    l->output = (float*)realloc(l->output, output_size * sizeof(float));
-    l->delta = (float*)realloc(l->delta, output_size * sizeof(float));
+    l->output = (float*)ta_realloc(l->output, output_size * sizeof(float));
+    l->delta = (float*)ta_realloc(l->delta, output_size * sizeof(float));
 
 #ifdef GPU
     cuda_free(l->output_gpu);

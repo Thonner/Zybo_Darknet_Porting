@@ -63,7 +63,7 @@ network *make_network(int n)
     network *net = (network*)ta_calloc(1, sizeof(network));
     net->n = n;
     net->layers = (layer*)ta_calloc(net->n, sizeof(layer));
-    net->seen = (size_t*)ta_calloc(1, sizeof(size_t));
+    net->seen = (size_t*)ta_calloc(1, sizeof(size_t)*2);
     net->t    = (int*)ta_calloc(1, sizeof(int));
     net->cost = (float*)ta_calloc(1, sizeof(float));
     return net;
@@ -744,6 +744,21 @@ network *parse_network_cfg(){
 			params.inputs = l.outputs;
 		}
 	}
+    free_list(sections);
+	layer out = get_network_output_layer(net);
+	net->outputs = out.outputs;
+	net->truths = out.outputs;
+	if(net->layers[net->n-1].truths) net->truths = net->layers[net->n-1].truths;
+	net->output = out.output;
+	net->input = (float*)ta_calloc(net->inputs*net->batch, sizeof(float));
+	net->truth = (float*)ta_calloc(net->truths*net->batch, sizeof(float));
+	if(workspace_size){
+	        fprintf(stderr, "%ld\n", workspace_size);
+
+	net->workspace = (float*)ta_calloc(1, workspace_size);
+
+	}
+	return net;
 }
 
 void free_section(section *s)
@@ -1207,6 +1222,208 @@ list *read_cfg(){
 
 
 	return options;
+}
+
+void load_weights(network *net)
+{
+    load_weights_upto(net, 0, net->n);
+}
+
+
+size_t fread(void *ptr, size_t size, size_t count, char* addr){
+	static int offset = 0;
+	char *place = (char*)ptr;
+	for(size_t i = 0; i < size*count; i++){
+		*place++ =addr[offset];
+		offset++;
+	}
+}
+
+void transpose_matrix(float *a, int rows, int cols)
+{
+    float *transpose = (float*)ta_calloc(rows*cols, sizeof(float));
+    int x, y;
+    for(x = 0; x < rows; ++x){
+        for(y = 0; y < cols; ++y){
+            transpose[y*rows + x] = a[x*cols + y];
+        }
+    }
+    memcpy(a, transpose, rows*cols*sizeof(float));
+    ta_free(transpose);
+}
+
+void load_convolutional_weights(layer l, char *fp)
+{
+	if(l.binary){
+		//load_convolutional_weights_binary(l, fp);
+		//return;
+	}
+	if(l.numload) l.n = l.numload;
+	int num = l.c/l.groups*l.n*l.size*l.size;
+	fread(l.biases, sizeof(float), l.n, fp);
+	if (l.batch_normalize && (!l.dontloadscales)){
+		fread(l.scales, sizeof(float), l.n, fp);
+		fread(l.rolling_mean, sizeof(float), l.n, fp);
+		fread(l.rolling_variance, sizeof(float), l.n, fp);
+		if(0){
+			int i;
+			for(i = 0; i < l.n; ++i){
+				printf("%g, ", l.rolling_mean[i]);
+			}
+			printf("\n");
+			for(i = 0; i < l.n; ++i){
+				printf("%g, ", l.rolling_variance[i]);
+			}
+			printf("\n");
+		}
+		if(0){
+			fill_cpu(l.n, 0, l.rolling_mean, 1);
+			fill_cpu(l.n, 0, l.rolling_variance, 1);
+		}
+		if(0){
+			int i;
+			for(i = 0; i < l.n; ++i){
+				printf("%g, ", l.rolling_mean[i]);
+			}
+			printf("\n");
+			for(i = 0; i < l.n; ++i){
+				printf("%g, ", l.rolling_variance[i]);
+			}
+			printf("\n");
+		}
+	}
+	fread(l.weights, sizeof(float), num, fp);
+	//if(l.c == 3) scal_cpu(num, 1./256, l.weights, 1);
+	if (l.flipped) {
+		transpose_matrix(l.weights, l.c*l.size*l.size, l.n);
+	}
+	//if (l.binary) binarize_weights(l.weights, l.n, l.c*l.size*l.size, l.weights);
+	#ifdef GPU
+		if(gpu_index >= 0){
+			push_convolutional_layer(l);
+		}
+	#endif
+	}
+void load_connected_weights(layer l, char *fp, int transpose)
+{
+    fread(l.biases, sizeof(float), l.outputs, fp);
+    fread(l.weights, sizeof(float), l.outputs*l.inputs, fp);
+    if(transpose){
+        transpose_matrix(l.weights, l.inputs, l.outputs);
+    }
+    //printf("Biases: %f mean %f variance\n", mean_array(l.biases, l.outputs), variance_array(l.biases, l.outputs));
+    //printf("Weights: %f mean %f variance\n", mean_array(l.weights, l.outputs*l.inputs), variance_array(l.weights, l.outputs*l.inputs));
+    if (l.batch_normalize && (!l.dontloadscales)){
+        fread(l.scales, sizeof(float), l.outputs, fp);
+        fread(l.rolling_mean, sizeof(float), l.outputs, fp);
+        fread(l.rolling_variance, sizeof(float), l.outputs, fp);
+        //printf("Scales: %f mean %f variance\n", mean_array(l.scales, l.outputs), variance_array(l.scales, l.outputs));
+        //printf("rolling_mean: %f mean %f variance\n", mean_array(l.rolling_mean, l.outputs), variance_array(l.rolling_mean, l.outputs));
+        //printf("rolling_variance: %f mean %f variance\n", mean_array(l.rolling_variance, l.outputs), variance_array(l.rolling_variance, l.outputs));
+    }
+#ifdef GPU
+    if(gpu_index >= 0){
+        push_connected_layer(l);
+    }
+#endif
+}
+
+void load_batchnorm_weights(layer l, char *fp)
+{
+    fread(l.scales, sizeof(float), l.c, fp);
+    fread(l.rolling_mean, sizeof(float), l.c, fp);
+    fread(l.rolling_variance, sizeof(float), l.c, fp);
+#ifdef GPU
+    if(gpu_index >= 0){
+        push_batchnorm_layer(l);
+    }
+#endif
+}
+
+void load_weights_upto(network *net, int start, int cutoff)
+{
+	 fprintf(stderr, "Loading weights from %s...", "DDR");
+	 fflush(stdout);
+
+	 char *fp = (char*)0x3D9DA600; //start address of preloaded weights
+
+	 int major;
+	 int minor;
+	 int revision;
+
+	 fread(&major, sizeof(int), 1, fp);
+	 fread(&minor, sizeof(int), 1, fp);
+	 fread(&revision, sizeof(int), 1, fp);
+	 if ((major*10 + minor) >= 2 && major < 1000 && minor < 1000){
+		 fread(net->seen, sizeof(size_t)*2, 1, fp);
+	 } else {
+		 int iseen = 0;
+		 fread(&iseen, sizeof(int), 1, fp);
+		 *net->seen = iseen;
+	 }
+	 int transpose = (major > 1000) || (minor > 1000);
+
+	 int i;
+	 for(i = start; i < net->n && i < cutoff; ++i){
+		 layer l = net->layers[i];
+		 if (l.dontload) continue;
+		 if(l.type == CONVOLUTIONAL || l.type == DECONVOLUTIONAL){
+			 load_convolutional_weights(l, fp);
+		 }
+		 if(l.type == CONNECTED){
+			 load_connected_weights(l, fp, transpose);
+		 }
+		 if(l.type == BATCHNORM){
+			 load_batchnorm_weights(l, fp);
+		 }
+		 if(l.type == CRNN){
+			 load_convolutional_weights(*(l.input_layer), fp);
+			 load_convolutional_weights(*(l.self_layer), fp);
+			 load_convolutional_weights(*(l.output_layer), fp);
+		 }
+		 if(l.type == RNN){
+			 load_connected_weights(*(l.input_layer), fp, transpose);
+			 load_connected_weights(*(l.self_layer), fp, transpose);
+			 load_connected_weights(*(l.output_layer), fp, transpose);
+		 }
+		 if (l.type == LSTM) {
+			 load_connected_weights(*(l.wi), fp, transpose);
+			 load_connected_weights(*(l.wf), fp, transpose);
+			 load_connected_weights(*(l.wo), fp, transpose);
+			 load_connected_weights(*(l.wg), fp, transpose);
+			 load_connected_weights(*(l.ui), fp, transpose);
+			 load_connected_weights(*(l.uf), fp, transpose);
+			 load_connected_weights(*(l.uo), fp, transpose);
+			 load_connected_weights(*(l.ug), fp, transpose);
+		 }
+		 if (l.type == GRU) {
+			 if(1){
+				 load_connected_weights(*(l.wz), fp, transpose);
+				 load_connected_weights(*(l.wr), fp, transpose);
+				 load_connected_weights(*(l.wh), fp, transpose);
+				 load_connected_weights(*(l.uz), fp, transpose);
+				 load_connected_weights(*(l.ur), fp, transpose);
+				 load_connected_weights(*(l.uh), fp, transpose);
+			 }else{
+				 load_connected_weights(*(l.reset_layer), fp, transpose);
+				 load_connected_weights(*(l.update_layer), fp, transpose);
+				 load_connected_weights(*(l.state_layer), fp, transpose);
+			 }
+		 }
+		 if(l.type == LOCAL){
+			 int locations = l.out_w*l.out_h;
+			 int size = l.size*l.size*l.c*l.n*locations;
+			 fread(l.biases, sizeof(float), l.outputs, fp);
+			 fread(l.weights, sizeof(float), size, fp);
+ #ifdef GPU
+			 if(gpu_index >= 0){
+				 push_local_layer(l);
+			 }
+ #endif
+		 }
+	 }
+	 fprintf(stderr, "Done!\n");
+
 }
 
 learning_rate_policy get_policy(char *s)

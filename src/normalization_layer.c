@@ -48,10 +48,10 @@ void resize_normalization_layer(layer *layer, int w, int h)
     layer->out_w = w;
     layer->inputs = w*h*c;
     layer->outputs = layer->inputs;
-    layer->output = (float*)realloc(layer->output, h * w * c * batch * sizeof(float));
-    layer->delta = (float*)realloc(layer->delta, h * w * c * batch * sizeof(float));
-    layer->squared = (float*)realloc(layer->squared, h * w * c * batch * sizeof(float));
-    layer->norms = (float*)realloc(layer->norms, h * w * c * batch * sizeof(float));
+    layer->output = (float*)ta_realloc(layer->output, h * w * c * batch * sizeof(float));
+    layer->delta = (float*)ta_realloc(layer->delta, h * w * c * batch * sizeof(float));
+    layer->squared = (float*)ta_realloc(layer->squared, h * w * c * batch * sizeof(float));
+    layer->norms = (float*)ta_realloc(layer->norms, h * w * c * batch * sizeof(float));
 #ifdef GPU
     cuda_free(layer->output_gpu);
     cuda_free(layer->delta_gpu); 

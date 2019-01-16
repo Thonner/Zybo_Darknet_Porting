@@ -30,7 +30,7 @@ BUILDING:
 
    You can #define STBIW_ASSERT(x) before the #include to avoid using assert.h.
    You can #define STBIW_MALLOC(), STBIW_REALLOC(), and STBIW_free() to replace
-   malloc,realloc,free.
+   malloc,ta_realloc,free.
    You can #define STBIW_MEMMOVE() to replace memmove()
    You can #define STBIW_ZLIB_COMPRESS to use a custom zlib-style compress function
    for PNG compression (instead of the builtin one), it must have the following signature:
@@ -217,7 +217,7 @@ STBIWDEF void stbi_flip_vertically_on_write(int flip_boolean);
 
 #ifndef STBIW_MALLOC
 #define STBIW_MALLOC(sz)        malloc(sz)
-#define STBIW_REALLOC(p,newsz)  realloc(p,newsz)
+#define STBIW_REALLOC(p,newsz)  ta_realloc(p,newsz)
 #define STBIW_FREE(p)           free(p)
 #endif
 
@@ -1498,7 +1498,7 @@ STBIWDEF int stbi_write_jpg(char const *filename, int x, int y, int comp, const 
       1.02 (2016-04-02)
              avoid allocating large structures on the stack
       1.01 (2016-01-16)
-             STBIW_REALLOC_SIZED: support allocators with no realloc support
+             STBIW_REALLOC_SIZED: support allocators with no ta_realloc support
              avoid race-condition in crc initialization
              minor compile issues
       1.00 (2015-09-14)

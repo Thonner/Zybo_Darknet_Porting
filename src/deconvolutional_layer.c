@@ -191,11 +191,11 @@ void resize_deconvolutional_layer(layer *l, int h, int w)
     l->outputs = l->out_h * l->out_w * l->out_c;
     l->inputs = l->w * l->h * l->c;
 
-    l->output = (float*)realloc(l->output, l->batch*l->outputs*sizeof(float));
-    l->delta  = (float*)realloc(l->delta,  l->batch*l->outputs*sizeof(float));
+    l->output = (float*)ta_realloc(l->output, l->batch*l->outputs*sizeof(float));
+    l->delta  = (float*)ta_realloc(l->delta,  l->batch*l->outputs*sizeof(float));
     if(l->batch_normalize){
-        l->x = (float*)realloc(l->x, l->batch*l->outputs*sizeof(float));
-        l->x_norm  = (float*)realloc(l->x_norm, l->batch*l->outputs*sizeof(float));
+        l->x = (float*)ta_realloc(l->x, l->batch*l->outputs*sizeof(float));
+        l->x_norm  = (float*)ta_realloc(l->x_norm, l->batch*l->outputs*sizeof(float));
     }
 
 #ifdef GPU

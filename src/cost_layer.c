@@ -70,8 +70,8 @@ void resize_cost_layer(cost_layer *l, int inputs)
 {
     l->inputs = inputs;
     l->outputs = inputs;
-    l->delta = (float*)realloc(l->delta, inputs*l->batch*sizeof(float));
-    l->output = (float*)realloc(l->output, inputs*l->batch*sizeof(float));
+    l->delta = (float*)ta_realloc(l->delta, inputs*l->batch*sizeof(float));
+    l->output = (float*)ta_realloc(l->output, inputs*l->batch*sizeof(float));
 #ifdef GPU
     cuda_free(l->delta_gpu);
     cuda_free(l->output_gpu);
