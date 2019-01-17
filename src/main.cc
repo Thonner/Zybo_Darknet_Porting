@@ -10,6 +10,7 @@
 
 #include "darknet.h"
 #include "detector.h"
+#include "utils.h"
 
 #include "sleep.h"
 #include "MIPI_D_PHY_RX.h"
@@ -18,21 +19,6 @@
 #define DEBUG 1
 
 
-#define IRPT_CTL_DEVID 		XPAR_PS7_SCUGIC_0_DEVICE_ID
-#define GPIO_DEVID			XPAR_PS7_GPIO_0_DEVICE_ID
-#define GPIO_IRPT_ID		XPAR_PS7_GPIO_0_INTR
-#define CAM_I2C_DEVID		XPAR_PS7_I2C_0_DEVICE_ID
-#define CAM_I2C_IRPT_ID		XPAR_PS7_I2C_0_INTR
-#define VDMA_DEVID			XPAR_AXIVDMA_0_DEVICE_ID
-#define VDMA_MM2S_IRPT_ID	XPAR_FABRIC_AXI_VDMA_0_MM2S_INTROUT_INTR
-#define VDMA_S2MM_IRPT_ID	XPAR_FABRIC_AXI_VDMA_0_S2MM_INTROUT_INTR
-#define CAM_I2C_SCLK_RATE	100000
-#define OSD_BASE_ADDR		XPAR_VIDEO_OUT_OSD_0_SCPU_AXI_BASEADDR
-
-#define DDR_BASE_ADDR		XPAR_DDR_MEM_BASEADDR
-#define MEM_BASE_ADDR		(DDR_BASE_ADDR + 0xA0000000+ 0x8000000)
-
-#define GAMMA_BASE_ADDR     XPAR_CAMERA_IN_AXI_GAMMACORRECTION_0_BASEADDR
 
 using namespace digilent;
 
@@ -98,6 +84,8 @@ int main()
 	xil_printf("Video init done.\r\n");
 
 	ta_init();
+
+
 
 
 	// Liquid lens control

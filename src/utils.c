@@ -32,9 +32,11 @@ double what_time_is_it_now()
 
 	XTime_GetTime(&tStart);
 
+	tStart = tStart/33.33333;
+
     struct timeval time;
-    time.tv_sec = tStart/1000;
-    time.tv_usec = tStart % 1000;
+    time.tv_sec = tStart/10000000;
+    time.tv_usec = tStart % 1000000;
     //if (gettimeofday(&time,NULL)){
      //   return 0;
     //}
