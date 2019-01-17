@@ -4,21 +4,9 @@
  *  Created on: Jan 14, 2019
  *      Author: thonner
  */
-#include "darknet.h"
-#include "option_list.h"
-#include "network.h"
-#include "utils.h"
-#include "box.h"
-#include "platform/platform.h"
-#include "ov5640/OV5640.h"
-#include "ov5640/ScuGicInterruptController.h"
-#include "ov5640/PS_GPIO.h"
-#include "ov5640/AXI_VDMA.h"
-#include "ov5640/PS_IIC.h"
-#include "MIPI_D_PHY_RX.h"
-#include "MIPI_CSI_2_RX.h"
+#include "detector.h"
 
-
+#include "sleep.h"
 
 void set_osd_reg(image im, detection *dets, int num, float thresh, char **names,/* image **alphabet,*/ int classes){
 	int i,j;
@@ -95,10 +83,9 @@ void set_osd_reg(image im, detection *dets, int num, float thresh, char **names,
 	}
 
 	Xil_Out32(OSD_BASE_ADDR+20, value);
-
 }
 
-void test_detector(){
+void test_detector(char *picture_base_addr, int pic_width, int pic_hieght, AXI_VDMA<ScuGicInterruptController>& vdma_driver){
 	list *options = read_data_cfg();
 	char *name_list = "data/coco.names";
 	char * names[] = {"person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair", "sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor", "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"};
@@ -112,8 +99,11 @@ void test_detector(){
 	float nms=.45;
 
 	while(1){ // while for multiple photos
-		char *image_base_addr = (char*)(0x3D609D00);
-		image im = load_image_color(image_base_addr,0,0);
+		vdma_driver.resetWrite();
+
+		//char *image_base_addr = (char*)(0x3D609D00);
+		char *image_base_addr = picture_base_addr;
+		image im = load_image_color(image_base_addr,pic_width,pic_hieght);
 		image sized = letterbox_image(im, net->w, net->h);
 		layer l = net->layers[net->n-1];
 
@@ -127,6 +117,10 @@ void test_detector(){
         draw_detections(im, dets, nboxes, 0.5, names, l.classes);
         set_osd_reg(im, dets, nboxes, 0.5, names, l.classes);
         free_detections(dets, nboxes);
+
+        vdma_driver.configureWrite(1280,720);
+		vdma_driver.enableWrite();
+		usleep(2000000);
 
 	}
 }

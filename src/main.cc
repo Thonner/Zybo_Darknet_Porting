@@ -98,9 +98,11 @@ int main()
 	uint8_t reg_value;
 	uint32_t color_values;
 
+	char *video_buff_base_addr = (char*)MEM_BASE_ADDR;
+	int pic_width = 1280;
+	int pic_hieght = 720;
+	test_detector(video_buff_base_addr, pic_width, pic_hieght, vdma_driver);
 
-
-	test_detector();
 
 	while(1){
 		Xil_Out32(OSD_BASE_ADDR+4, 200);

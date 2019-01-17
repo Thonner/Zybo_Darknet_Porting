@@ -31,7 +31,7 @@
 #define OSD_BASE_ADDR		XPAR_VIDEO_OUT_OSD_0_SCPU_AXI_BASEADDR
 
 #define DDR_BASE_ADDR		XPAR_DDR_MEM_BASEADDR
-#define MEM_BASE_ADDR		(DDR_BASE_ADDR + 0xA0000000+ 0x10100000)
+#define MEM_BASE_ADDR		(DDR_BASE_ADDR + 0xA000000 + 0x10100000)
 
 #define GAMMA_BASE_ADDR     XPAR_CAMERA_IN_AXI_GAMMACORRECTION_0_BASEADDR
 
@@ -673,7 +673,6 @@ void free_network(network *net);
 void set_batch_network(network *net, int b);
 void set_temp_network(network *net, float t);
 image load_image(char *filename, int w, int h, int c);
-image load_image_color(char *filename, int w, int h);
 image make_image(int w, int h, int c);
 void free_list(list *l);
 void free_list(list *l);
