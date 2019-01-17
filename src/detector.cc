@@ -77,7 +77,7 @@ void set_osd_reg(image im, detection *dets, int num, float thresh, char **names,
 		value = value | temp;
 	}
 	for(int i = 0; i < 2; i++){
-		int temp = write[i] - '0' +22;
+		int temp = write[i+4] - '0' +22;
 		temp = temp << (i+4)*5;
 		value = value | temp;
 	}

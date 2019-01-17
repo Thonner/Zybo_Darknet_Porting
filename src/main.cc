@@ -98,6 +98,35 @@ int main()
 	uint8_t reg_value;
 	uint32_t color_values;
 
+
+	char write[6];
+	write[0] = 'f';
+	write[1] = 'u';
+	write[2] = 'c';
+	write[3] = 'k';
+	write[4] = '1';
+	write[5] = '2';
+
+	int value = 0;
+	for(int i = 0; i < 4; i++){
+		int temp = write[i] - 'a';
+		temp = temp << i*5;
+		value = value | temp;
+	}
+	for(int i = 0; i < 2; i++){
+		int temp = write[i+4] - '0'+22;
+		temp = temp << (i+4)*5;
+		value = value | temp;
+	}
+
+	Xil_Out32(OSD_BASE_ADDR, 400);
+	Xil_Out32(OSD_BASE_ADDR+4, 400);
+	Xil_Out32(OSD_BASE_ADDR+8, 50);
+	Xil_Out32(OSD_BASE_ADDR+12, 50);
+	Xil_Out32(OSD_BASE_ADDR+16, 10);
+
+	Xil_Out32(OSD_BASE_ADDR+20, value);
+
 	char *video_buff_base_addr = (char*)MEM_BASE_ADDR;
 	int pic_width = 1280;
 	int pic_hieght = 720;
