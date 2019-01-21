@@ -11,6 +11,7 @@
 #include "darknet.h"
 #include "detector.h"
 #include "utils.h"
+#include "sha256.h"
 
 #include "sleep.h"
 #include "MIPI_D_PHY_RX.h"
@@ -40,7 +41,7 @@ void pipeline_mode_change(AXI_VDMA<ScuGicInterruptController>& vdma_driver, OV56
 	}
 
 	{
-		vdma_driver.enableWrite();
+		//vdma_driver.enableWrite();
 		MIPI_CSI_2_RX_mWriteReg(XPAR_CAMERA_IN_MIPI_CSI_2_RX_0_S_AXI_LITE_BASEADDR, CR_OFFSET, CR_ENABLE_MASK);
 		MIPI_D_PHY_RX_mWriteReg(XPAR_CAMERA_IN_MIPI_D_PHY_RX_0_S_AXI_LITE_BASEADDR, CR_OFFSET, CR_ENABLE_MASK);
 		cam.set_mode(mode);
@@ -88,6 +89,8 @@ int main()
 
 
 
+
+
 	// Liquid lens control
 	uint8_t read_char0 = 0;
 	uint8_t read_char1 = 0;
@@ -130,8 +133,43 @@ int main()
 	char *video_buff_base_addr = (char*)MEM_BASE_ADDR;
 	int pic_width = 1280;
 	int pic_hieght = 720;
-	test_detector(video_buff_base_addr, pic_width, pic_hieght, vdma_driver);
+	//test_detector(video_buff_base_addr, pic_width, pic_hieght, vdma_driver);
 
+
+	int *rgb_cat = (int *)MEM_BASE_ADDR + 2;
+
+	int state_reg = Xil_In32(1231);
+	Xil_Out32(1231, state_reg & 0xFFFFFFFE);
+
+	for(int i = 0; i < (720*1280*3)/4; i++){
+		Xil_Out32(12345+4*i , rgb_cat[i]);
+	}
+
+	state_reg = Xil_In32(1231);
+	Xil_Out32(1231, state_reg | 1);
+
+	BYTE *cat_rgb = (BYTE*)MEM_BASE_ADDR + 2;
+
+	BYTE res_buf[SHA256_BLOCK_SIZE];
+	SHA256_CTX ctx;
+	sha256_init(&ctx);
+	double start = what_time_is_it_now();
+	sha256_update(&ctx, cat_rgb, 2764800);
+	double end = what_time_is_it_now();
+	sha256_final(&ctx, res_buf);
+
+	for (int i = 0; i < 32; i++){
+		Xil_Out8(1231+i, res_buf[i]);
+	}
+
+	printf("check in %.2f seconds\n", (end-start));
+	for(int i = 0; i < 8; i++){
+		for(int j = 0; j < 4; j++){
+			xil_printf("%x", res_buf[i*4+j]);
+
+		}
+		xil_printf(" ");
+	}
 
 	while(1){
 		Xil_Out32(OSD_BASE_ADDR+4, 200);
